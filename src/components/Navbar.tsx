@@ -1,12 +1,17 @@
+
 import Link from 'next/link'
 import MaxWidthWrapper from './MaxWidthWrapper'
 import { buttonVariants } from './ui/button'
 import { ArrowRight } from 'lucide-react'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { GetCookie } from './Cookies/CookiesLocal'
+import { LogoutComponent } from './Auth/Logout'
+import { useRouter } from 'next/navigation'
+import { GotoUserProfile } from './Profile/UserProfile'
 
 const Navbar = async () => {
-  const { getUser } = getKindeServerSession()
-  const user = await getUser()
+
+  //const { getUser } = await GetCookie('token')
+  const user = await GetCookie('token')
  const isAdmin = user?.email === process.env.ADMIN_EMAIL
   return (
     <nav className='sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all'>
@@ -19,14 +24,6 @@ const Navbar = async () => {
           <div className='h-full flex items-center space-x-4'>
             {user ? (
               <>
-                <Link
-                  href='/api/auth/logout'
-                  className={buttonVariants({
-                    size: 'sm',
-                    variant: 'ghost',
-                  })}>
-                  Sign out
-                </Link>
                 {isAdmin ? (
                   <Link
                     href='/dashboard'
@@ -43,14 +40,15 @@ const Navbar = async () => {
                     size: 'sm',
                     className: 'hidden sm:flex items-center gap-1',
                   })}>
-                  Create case
+                   Check MRI Image
                   <ArrowRight className='ml-1.5 h-5 w-5' />
                 </Link>
+                <LogoutComponent/>
               </>
             ) : (
               <>
                 <Link
-                  href='/api/auth/register'
+                  href='/signup'
                   className={buttonVariants({
                     size: 'sm',
                     variant: 'ghost',
@@ -59,7 +57,7 @@ const Navbar = async () => {
                 </Link>
 
                 <Link
-                  href='/api/auth/login'
+                  href='/login'
                   className={buttonVariants({
                     size: 'sm',
                     variant: 'ghost',
